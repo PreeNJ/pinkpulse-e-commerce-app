@@ -7,11 +7,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Category {
   id          String    @id @default(cuid())
   name        String    @unique
   description String?
+
   products    Product[]
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -20,15 +23,34 @@ model Product {
   id            String         @id @default(cuid())
   name          String
   description   String
+
   sku           String         @unique
+
   price         Decimal
   salePrice     Decimal?
+
   stockQuantity Int
+
   isFeatured    Boolean        @default(false)
   isActive      Boolean        @default(true)
+
   categoryId    String
   category      Category       @relation(fields: [categoryId], references: [id])
+
   images        ProductImage[]
+
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+}
+
+model ProductImage {
+  id         String   @id @default(cuid())
+
+  imageUrl   String
+  altText    String?
+
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+
+  createdAt  DateTime @default(now())
 }
