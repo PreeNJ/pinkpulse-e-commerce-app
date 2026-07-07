@@ -8,11 +8,40 @@ const getCategories = async (req, res) => {
         name: "asc",
       },
     });
+
     res.status(200).json(categories);
   } catch (error) {
     console.error(error);
+
     res.status(500).json({
       message: "Failed to fetch categories.",
     });
   }
+};
+
+// CREATE category
+const createCategory = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    const category = await prisma.category.create({
+      data: {
+        name,
+        description,
+      },
+    });
+
+    res.status(201).json(category);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to create category.",
+    });
+  }
+};
+
+module.exports = {
+  getCategories,
+  createCategory,
 };
