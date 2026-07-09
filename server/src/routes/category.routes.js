@@ -7,20 +7,18 @@ const {
   getCategoryById,
   createCategory,
   updateCategory,
-  deleteCategory,
 } = require("../controllers/category.controller");
 
-// Read
+// GET all categories
 router.get("/", getCategories);
+
+// GET single category
 router.get("/:id", getCategoryById);
 
-// Create
+// CREATE category
 router.post("/", createCategory);
 
-// Update
+// UPDATE category
 router.put("/:id", updateCategory);
-
-// Delete
-router.delete("/:id", deleteCategory);
 
 module.exports = router;
