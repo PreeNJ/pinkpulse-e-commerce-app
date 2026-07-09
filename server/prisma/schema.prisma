@@ -1,55 +1,55 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Category {
-  id          String  @id @default(cuid())
-  name        String  @unique
+  id          String    @id @default(cuid())
+  name        String    @unique
   description String?
 
-  products Product[]
+  products    Product[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Product {
-  id          String @id @default(cuid())
-  name        String
-  description String
+  id            String         @id @default(cuid())
+  name          String
+  description   String
 
-  sku String @unique
+  sku           String         @unique
 
-  price     Decimal
-  salePrice Decimal?
+  price         Decimal
+  salePrice     Decimal?
 
   stockQuantity Int
 
-  isFeatured Boolean @default(false)
-  isActive   Boolean @default(true)
+  isFeatured    Boolean        @default(false)
+  isActive      Boolean        @default(true)
 
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  category      Category       @relation(fields: [categoryId], references: [id])
 
-  images ProductImage[]
+  images        ProductImage[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model ProductImage {
-  id String @id @default(cuid())
+  id         String   @id @default(cuid())
 
-  imageUrl String
-  altText  String?
+  imageUrl   String
+  altText    String?
 
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
 
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 }
