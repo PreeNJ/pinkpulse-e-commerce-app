@@ -23,6 +23,37 @@ const getProducts = async (req, res) => {
   }
 };
 
+// GET single product
+const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await prisma.product.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found.",
+      });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch product.",
+    });
+  }
+};
+
 // CREATE product
 const createProduct = async (req, res) => {
   try {
@@ -38,19 +69,6 @@ const createProduct = async (req, res) => {
       categoryId,
     } = req.body;
 
-    // Check if category exists
-    const category = await prisma.category.findUnique({
-      where: {
-        id: categoryId,
-      },
-    });
-
-    if (!category) {
-      return res.status(404).json({
-        message: "Category not found.",
-      });
-    }
-
     const product = await prisma.product.create({
       data: {
         name,
@@ -65,6 +83,7 @@ const createProduct = async (req, res) => {
       },
       include: {
         category: true,
+        images: true,
       },
     });
 
@@ -80,5 +99,6 @@ const createProduct = async (req, res) => {
 
 module.exports = {
   getProducts,
+  getProductById,
   createProduct,
 };
