@@ -97,8 +97,69 @@ const createProduct = async (req, res) => {
   }
 };
 
+// UPDATE product
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      name,
+      description,
+      sku,
+      price,
+      salePrice,
+      stockQuantity,
+      isFeatured,
+      isActive,
+      categoryId,
+    } = req.body;
+
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json({
+        message: "Product not found.",
+      });
+    }
+
+    const product = await prisma.product.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        description,
+        sku,
+        price,
+        salePrice,
+        stockQuantity,
+        isFeatured,
+        isActive,
+        categoryId,
+      },
+      include: {
+        category: true,
+        images: true,
+      },
+    });
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to update product.",
+    });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
   createProduct,
+  updateProduct,
 };
