@@ -1,5 +1,28 @@
 const prisma = require("../config/prisma");
 
+// GET all products
+const getProducts = async (req, res) => {
+  try {
+    const products = await prisma.product.findMany({
+      include: {
+        category: true,
+        images: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch products.",
+    });
+  }
+};
+
 // CREATE product
 const createProduct = async (req, res) => {
   try {
@@ -56,5 +79,6 @@ const createProduct = async (req, res) => {
 };
 
 module.exports = {
+  getProducts,
   createProduct,
 };
