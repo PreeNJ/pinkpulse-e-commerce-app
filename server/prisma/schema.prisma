@@ -53,3 +53,14 @@ model ProductImage {
 
   createdAt  DateTime @default(now())
 }
+
+model User {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
