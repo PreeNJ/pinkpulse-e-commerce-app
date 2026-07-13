@@ -81,10 +81,6 @@ const createProduct = async (req, res) => {
         isActive,
         categoryId,
       },
-      include: {
-        category: true,
-        images: true,
-      },
     });
 
     res.status(201).json(product);
@@ -140,10 +136,6 @@ const updateProduct = async (req, res) => {
         isFeatured,
         isActive,
         categoryId,
-      },
-      include: {
-        category: true,
-        images: true,
       },
     });
 
