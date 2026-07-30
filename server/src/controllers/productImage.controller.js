@@ -4,6 +4,9 @@ const uploadProductImage = async (req, res) => {
   try {
     const { productId } = req.body;
 
+    console.log("req.body:", req.body);
+    console.log("productId:", productId);
+
     if (!req.file) {
       return res.status(400).json({
         message: "No image uploaded.",
@@ -15,6 +18,8 @@ const uploadProductImage = async (req, res) => {
         id: productId,
       },
     });
+
+    console.log("product:", product);
 
     if (!product) {
       return res.status(404).json({

@@ -8,10 +8,6 @@ const {
   uploadProductImage,
 } = require("../controllers/productImage.controller");
 
-router.post(
-  "/",
-  upload.single("image"),
-  uploadProductImage
-);
+router.post("/", upload.single("image"), uploadProductImage);
 
 module.exports = router;
