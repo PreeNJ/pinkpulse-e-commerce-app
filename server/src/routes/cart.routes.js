@@ -1,78 +1,9 @@
-const prisma = require("../config/prisma");
+const express = require("express");
 
-// ADD product to cart
-const addToCart = async (req, res) => {
-  try {
-    const { userId, productId, quantity } = req.body;
+const router = express.Router();
 
-    // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+const { addToCart } = require("../controllers/cart.controller");
 
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found.",
-      });
-    }
+router.post("/", addToCart);
 
-    // Check if product exists
-    const product = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
-
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found.",
-      });
-    }
-
-    // Check if item is already in cart
-    const existingItem = await prisma.cartItem.findUnique({
-      where: {
-        userId_productId: {
-          userId,
-          productId,
-        },
-      },
-    });
-
-    if (existingItem) {
-      const updatedItem = await prisma.cartItem.update({
-        where: {
-          id: existingItem.id,
-        },
-        data: {
-          quantity: existingItem.quantity + (quantity || 1),
-        },
-      });
-
-      return res.status(200).json(updatedItem);
-    }
-
-    const cartItem = await prisma.cartItem.create({
-      data: {
-        userId,
-        productId,
-        quantity: quantity || 1,
-      },
-    });
-
-    res.status(201).json(cartItem);
-
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      message: "Failed to add item to cart.",
-    });
-  }
-};
-
-module.exports = {
-  addToCart,
-};
+module.exports = router;
