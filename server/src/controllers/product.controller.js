@@ -1,5 +1,14 @@
 const prisma = require("../config/prisma");
 
+// Helper function to format image URLs
+const formatProduct = (product, req) => ({
+  ...product,
+  images: product.images.map((image) => ({
+    ...image,
+    imageUrl: `${req.protocol}://${req.get("host")}${image.imageUrl}`,
+  })),
+});
+
 // GET all products
 const getProducts = async (req, res) => {
   try {
@@ -13,7 +22,11 @@ const getProducts = async (req, res) => {
       },
     });
 
-    res.status(200).json(products);
+    const formattedProducts = products.map((product) =>
+      formatProduct(product, req)
+    );
+
+    res.status(200).json(formattedProducts);
   } catch (error) {
     console.error(error);
 
@@ -44,7 +57,7 @@ const getProductById = async (req, res) => {
       });
     }
 
-    res.status(200).json(product);
+    res.status(200).json(formatProduct(product, req));
   } catch (error) {
     console.error(error);
 
@@ -68,6 +81,19 @@ const createProduct = async (req, res) => {
       isActive,
       categoryId,
     } = req.body;
+
+    // Check if category exists
+    const category = await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found.",
+      });
+    }
 
     const product = await prisma.product.create({
       data: {
@@ -119,6 +145,19 @@ const updateProduct = async (req, res) => {
     if (!existingProduct) {
       return res.status(404).json({
         message: "Product not found.",
+      });
+    }
+
+    // Check if category exists
+    const category = await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found.",
       });
     }
 
