@@ -36,8 +36,7 @@ model Product {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
 
-  images ProductImage[]
-
+  images    ProductImage[]
   cartItems CartItem[]
 
   createdAt DateTime @default(now())
@@ -51,7 +50,7 @@ model ProductImage {
   altText  String?
 
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
 
   createdAt DateTime @default(now())
 }
@@ -80,5 +79,8 @@ model CartItem {
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
 }
