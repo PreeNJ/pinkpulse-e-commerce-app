@@ -80,8 +80,5 @@ model CartItem {
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, productId])
+  createdAt  DateTime @default(now())
 }
