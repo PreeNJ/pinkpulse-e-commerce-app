@@ -7,39 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
 model Category {
-  id          String    @id @default(cuid())
-  name        String    @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
 
   products    Product[]
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Product {
-  id            String         @id @default(cuid())
+  id            String   @id @default(cuid())
   name          String
   description   String
 
-  sku           String         @unique
+  sku           String   @unique
 
   price         Decimal
   salePrice     Decimal?
 
   stockQuantity Int
 
-  isFeatured    Boolean        @default(false)
-  isActive      Boolean        @default(true)
+  isFeatured    Boolean  @default(false)
+  isActive      Boolean  @default(true)
 
   categoryId    String
-  category      Category       @relation(fields: [categoryId], references: [id])
+  category      Category @relation(fields: [categoryId], references: [id])
 
   images        ProductImage[]
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model ProductImage {
@@ -47,6 +56,67 @@ model ProductImage {
 
   imageUrl   String
   altText    String?
+
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+}
+
+model User {
+  id         String   @id @default(cuid())
+  firstName  String
+  lastName   String
+  email      String   @unique
+  password   String
+
+  cartItems  CartItem[]
+  orders     Order[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model CartItem {
+  id         String   @id @default(cuid())
+
+  quantity   Int      @default(1)
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+
+  totalAmount Decimal
+  status      OrderStatus @default(PENDING)
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orderItems  OrderItem[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+
+  quantity   Int
+  price      Decimal
+
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   productId  String
   product    Product  @relation(fields: [productId], references: [id])
