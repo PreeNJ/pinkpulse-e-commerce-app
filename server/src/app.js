@@ -7,6 +7,7 @@ const categoryRoutes = require("./routes/category.routes");
 const productRoutes = require("./routes/product.routes");
 const productImageRoutes = require("./routes/productImage.routes");
 const cartRoutes = require("./routes/cart.routes");
+const orderRoutes = require("./routes/order.routes");
 
 const app = express();
 
@@ -14,17 +15,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve uploaded images
+
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
-// Routes
+
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/product-images", productImageRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
-// Health check
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
