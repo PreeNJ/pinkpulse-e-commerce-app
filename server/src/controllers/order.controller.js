@@ -4,13 +4,8 @@ const prisma = require("../config/prisma");
 // CHECKOUT
 const checkout = async (req, res) => {
   try {
-    const { userId } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({
-        message: "userId is required.",
-      });
-    }
+    // Get user from authentication middleware
+    const userId = req.user.id;
 
     const order = await prisma.$transaction(async (tx) => {
       // 1. Get user's cart
@@ -39,7 +34,7 @@ const checkout = async (req, res) => {
         }
       }
 
-      // 4. Calculate total using the current database prices
+      // 4. Calculate total using current database prices
       const total = cartItems.reduce((sum, item) => {
         const price = item.product.salePrice ?? item.product.price;
 
@@ -91,7 +86,7 @@ const checkout = async (req, res) => {
         }
       }
 
-      // 7. Clear the user's cart
+      // 7. Clear user's cart
       await tx.cartItem.deleteMany({
         where: {
           userId,
@@ -127,22 +122,26 @@ const checkout = async (req, res) => {
     if (error.message.startsWith("INSUFFICIENT_STOCK:")) {
       const productName = error.message.split(":")[1];
 
-
       return res.status(400).json({
         message: `Not enough stock available for "${productName}".`,
       });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Checkout failed.",
     });
   }
 };
 
-// GET ALL ORDERS
+// GET LOGGED-IN USER'S ORDERS
 const getOrders = async (req, res) => {
   try {
+    const userId = req.user.id;
+
     const orders = await prisma.order.findMany({
+      where: {
+        userId,
+      },
       include: {
         items: {
           include: {
@@ -155,14 +154,14 @@ const getOrders = async (req, res) => {
       },
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       orders,
     });
   } catch (error) {
     console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch orders.",
     });
   }
@@ -171,11 +170,13 @@ const getOrders = async (req, res) => {
 // GET SINGLE ORDER
 const getOrderById = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { id } = req.params;
 
-    const order = await prisma.order.findUnique({
+    const order = await prisma.order.findFirst({
       where: {
         id,
+        userId,
       },
       include: {
         items: {
@@ -192,14 +193,14 @@ const getOrderById = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       order,
     });
   } catch (error) {
     console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch order.",
     });
   }

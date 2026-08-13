@@ -6,12 +6,17 @@ const {
   getOrderById,
 } = require("../controllers/order.controller");
 
+const protect = require("../middleware/auth.middleware");
+
 const router = express.Router();
 
-router.post("/checkout", checkout);
+// Checkout using the logged-in user
+router.post("/checkout", protect, checkout);
 
-router.get("/", getOrders);
+// Get logged-in user's orders
+router.get("/", protect, getOrders);
 
-router.get("/:id", getOrderById);
+// Get one of the logged-in user's orders
+router.get("/:id", protect, getOrderById);
 
 module.exports = router;

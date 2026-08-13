@@ -3,11 +3,12 @@ const prisma = require("../config/prisma");
 // ADD PRODUCT TO CART
 const addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const { productId, quantity } = req.body;
+    const userId = req.user.id;
 
-    if (!userId || !productId) {
+    if (!productId) {
       return res.status(400).json({
-        message: "userId and productId are required.",
+        message: "productId is required.",
       });
     }
 
@@ -112,7 +113,7 @@ const addToCart = async (req, res) => {
 // GET USER CART
 const getCart = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
 
     const cartItems = await prisma.cartItem.findMany({
       where: {
@@ -131,7 +132,9 @@ const getCart = async (req, res) => {
     });
 
     const total = cartItems.reduce((sum, item) => {
-      const price = Number(item.product.salePrice ?? item.product.price);
+      const price = Number(
+        item.product.salePrice ?? item.product.price
+      );
 
       return sum + price * item.quantity;
     }, 0);
@@ -153,7 +156,8 @@ const getCart = async (req, res) => {
 // UPDATE CART ITEM
 const updateCartItem = async (req, res) => {
   try {
-    const { userId, productId } = req.params;
+    const { productId } = req.params;
+    const userId = req.user.id;
     const { quantity } = req.body;
 
     if (!quantity || quantity < 1) {
@@ -218,7 +222,8 @@ const updateCartItem = async (req, res) => {
 // REMOVE CART ITEM
 const removeFromCart = async (req, res) => {
   try {
-    const { userId, productId } = req.params;
+    const { productId } = req.params;
+    const userId = req.user.id;
 
     await prisma.cartItem.delete({
       where: {
@@ -251,7 +256,7 @@ const removeFromCart = async (req, res) => {
 // CLEAR CART
 const clearCart = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
 
     await prisma.cartItem.deleteMany({
       where: {
