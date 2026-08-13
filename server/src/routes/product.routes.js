@@ -10,19 +10,16 @@ const {
   deleteProduct,
 } = require("../controllers/product.controller");
 
-// GET all products
-router.get("/", getProducts);
+const protect = require("../middleware/auth.middleware");
+const admin = require("../middleware/admin.middleware");
 
-// GET single product
+// Public routes
+router.get("/", getProducts);
 router.get("/:id", getProductById);
 
-// CREATE product
-router.post("/", createProduct);
-
-// UPDATE product
-router.put("/:id", updateProduct);
-
-// DELETE product
-router.delete("/:id", deleteProduct);
+// Admin-only routes
+router.post("/", protect, admin, createProduct);
+router.put("/:id", protect, admin, updateProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 module.exports = router;

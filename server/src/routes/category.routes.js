@@ -10,19 +10,16 @@ const {
   deleteCategory,
 } = require("../controllers/category.controller");
 
-// GET all categories
-router.get("/", getCategories);
+const protect = require("../middleware/auth.middleware");
+const admin = require("../middleware/admin.middleware");
 
-// GET single category
+// Public routes
+router.get("/", getCategories);
 router.get("/:id", getCategoryById);
 
-// CREATE category
-router.post("/", createCategory);
-
-// UPDATE category
-router.put("/:id", updateCategory);
-
-// DELETE category
-router.delete("/:id", deleteCategory);
+// Admin-only routes
+router.post("/", protect, admin, createCategory);
+router.put("/:id", protect, admin, updateCategory);
+router.delete("/:id", protect, admin, deleteCategory);
 
 module.exports = router;

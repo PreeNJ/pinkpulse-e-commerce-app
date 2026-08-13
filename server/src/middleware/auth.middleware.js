@@ -7,7 +7,7 @@ const protect = async (req, res, next) => {
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        message: "Not authorized. No token provided.",
+        message: "Not authorized. Please log in.",
       });
     }
 
@@ -24,6 +24,7 @@ const protect = async (req, res, next) => {
         firstName: true,
         lastName: true,
         email: true,
+        role: true,
       },
     });
 
