@@ -7,9 +7,7 @@ const checkout = async (req, res) => {
 
     // Get user's cart
     const cartItems = await prisma.cartItem.findMany({
-      where: {
-        userId,
-      },
+      where: { userId },
       include: {
         product: true,
       },
@@ -23,7 +21,7 @@ const checkout = async (req, res) => {
     }
 
     // Validate stock and calculate total
-    let totalAmount = 0;
+    let total = 0;
 
     for (const item of cartItems) {
       if (!item.product.isActive) {
@@ -39,8 +37,7 @@ const checkout = async (req, res) => {
       }
 
       const price = item.product.salePrice ?? item.product.price;
-
-      totalAmount += Number(price) * item.quantity;
+      total += Number(price) * item.quantity;
     }
 
     // Create order, order items, update stock, and clear cart
@@ -48,7 +45,7 @@ const checkout = async (req, res) => {
       const newOrder = await tx.order.create({
         data: {
           userId,
-          totalAmount,
+          total,
           status: "PENDING",
         },
       });
@@ -66,9 +63,7 @@ const checkout = async (req, res) => {
         });
 
         await tx.product.update({
-          where: {
-            id: item.productId,
-          },
+          where: { id: item.productId },
           data: {
             stockQuantity: {
               decrement: item.quantity,
@@ -78,15 +73,13 @@ const checkout = async (req, res) => {
       }
 
       await tx.cartItem.deleteMany({
-        where: {
-          userId,
-        },
+        where: { userId },
       });
 
       return newOrder;
     });
 
-    // Return completed order details
+    // Return completed order
     const completeOrder = await prisma.order.findUnique({
       where: {
         id: order.id,
@@ -104,7 +97,11 @@ const checkout = async (req, res) => {
       },
     });
 
-    res.status(201).json(completeOrder);
+    res.status(201).json({
+      success: true,
+      message: "Checkout completed successfully.",
+      order: completeOrder,
+    });
   } catch (error) {
     console.error(error);
 
