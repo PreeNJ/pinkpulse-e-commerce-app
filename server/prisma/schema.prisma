@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,49 +8,119 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
 model Category {
   id          String    @id @default(cuid())
   name        String    @unique
   description String?
 
-  products    Product[]
+  products Product[]
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
   id            String         @id @default(cuid())
   name          String
   description   String
-
   sku           String         @unique
-
   price         Decimal
   salePrice     Decimal?
-
   stockQuantity Int
-
   isFeatured    Boolean        @default(false)
   isActive      Boolean        @default(true)
 
-  categoryId    String
-  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
-  images        ProductImage[]
+  images    ProductImage[]
+  cartItems CartItem[]
+  orderItems OrderItem[]
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ProductImage {
-  id         String   @id @default(cuid())
+  id        String  @id @default(cuid())
+  imageUrl  String
+  altText   String?
 
-  imageUrl   String
-  altText    String?
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  productId  String
-  product    Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
 
-  createdAt  DateTime @default(now())
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  role      UserRole @default(USER)
+
+  cartItems CartItem[]
+  orders    Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  quantity  Int    @default(1)
+
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  total     Decimal
+  status    OrderStatus @default(PENDING)
+
+  items     OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  quantity  Int
+  price     Decimal
+
+  createdAt DateTime @default(now())
 }
