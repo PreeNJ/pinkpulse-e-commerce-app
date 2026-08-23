@@ -168,3 +168,40 @@
     @apply font-sans;
   }
 }
+
+/* --- PinkPulse storefront (ported from pink-pulse-store) --- */
+.pinkpulse-app {
+  --font-serif: var(--font-playfair), 'Cormorant Garamond', Georgia, serif;
+  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
+}
+
+.pinkpulse-app h1,
+.pinkpulse-app h2,
+.pinkpulse-app h3,
+.pinkpulse-app .font-serif {
+  font-family: var(--font-serif);
+}
+
+.glow-pink {
+  box-shadow: 0 0 35px -5px rgba(244, 63, 94, 0.25);
+}
+
+.glow-pink-strong {
+  box-shadow: 0 0 50px 0px rgba(244, 63, 94, 0.4);
+}
+
+.pinkpulse-app ::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.pinkpulse-app ::-webkit-scrollbar-track {
+  background: #0d0b10;
+}
+.pinkpulse-app ::-webkit-scrollbar-thumb {
+  background: #2a2230;
+  border-radius: 4px;
+}
+.pinkpulse-app ::-webkit-scrollbar-thumb:hover {
+  background: #f43f5e;
+}

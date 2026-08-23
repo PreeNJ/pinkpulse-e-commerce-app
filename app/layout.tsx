@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Cormorant_Garamond } from 'next/font/google'
+import { Geist, Geist_Mono, Cormorant_Garamond, Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
@@ -13,11 +13,21 @@ const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
 })
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+})
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: '--font-plus-jakarta',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+})
 
 export const metadata: Metadata = {
-  title: 'Lumière — Intimate Wellness, Reimagined',
+  title: 'Pink Pulse | Intimate Wellness & Pleasure Objects Kenya',
   description:
-    'Thoughtfully designed objects for pleasure and wellbeing. Discreet packaging, body-safe materials, and timeless design.',
+    'Pink Pulse - Your pleasure is our priority. 100% discreet packaging and fast countrywide delivery across Kenya. Order online or via WhatsApp +254 762 446 006.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -54,7 +64,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} bg-background`}
+      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${playfair.variable} ${plusJakarta.variable} bg-background`}
     >
       <body className="font-sans antialiased">
         {children}
@@ -63,3 +73,6 @@ export default function RootLayout({
     </html>
   )
 }
+
+
+
