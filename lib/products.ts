@@ -2,7 +2,7 @@ import { Product, Testimonial, CategoryCard } from './types';
 
 export const WHATSAPP_PHONE = '254762446006';
 export const WHATSAPP_DISPLAY = '+254 762 446 006';
-export const EMAIL_ADDRESS = 'pinkpulseke@gmail.com';
+export const EMAIL_ADDRESS = 'pinkpulse254@gmail.com';
 export const TIKTOK_HANDLE = '@pinkpulse254';
 export const TIKTOK_URL = 'https://www.tiktok.com/@pinkpulse254';
 export const INSTAGRAM_HANDLE = '@pinkpulse.ke';
@@ -14,7 +14,7 @@ export const CATEGORY_CARDS: CategoryCard[] = [
     title: 'LADIES TOYS',
     subtitle: 'Roses, Suction & Wands',
     imageUrl: '/products/the_original_rose_toy_1787511082867.jpg',
-    count: 6,
+    count: 7,
   },
   {
     id: 'men-toys',
@@ -27,21 +27,21 @@ export const CATEGORY_CARDS: CategoryCard[] = [
     id: 'lovense',
     title: 'COUPLES & WIRELESS',
     subtitle: 'App Control & Wearables',
-    imageUrl: '/products/lush_wearable_egg_1787511210817.jpg',
+    imageUrl: '/products/lume.png',
     count: 2,
   },
   {
     id: 'lubricants',
     title: 'LUBES & CARE',
     subtitle: 'Water-Based & Organic',
-    imageUrl: '/products/intimate_lube_tube_1787511198808.jpg',
-    count: 1,
+    imageUrl: '/products/intimate_lube_tube_1787511198808.jpeg',
+    count: 2,
   },
   {
     id: 'dildos',
     title: 'DILDOS & GLASS',
     subtitle: 'Suction Cups & Real Feel',
-    imageUrl: '/products/suction_base_massager_1787511501533.jpg',
+    imageUrl: '/products/suction_base_massager_1787511501533.jpg.jpeg',
     count: 2,
   },
   {
@@ -114,7 +114,7 @@ export const PRODUCTS: Product[] = [
       {
         name: 'Velvet Black',
         hex: '#18181b',
-        imageUrl: '/products/the_original_rose_toy_1787511082867.jpg'
+        imageUrl: '/products/rose_toy_velvet_black_1787515251372.jpg'
       },
       {
         name: 'Royal Purple',
@@ -353,8 +353,8 @@ export const PRODUCTS: Product[] = [
     description: 'A premium, water-soluble gentle lubricant that enhances glide and sensitivity. Non-sticky, condom-safe, toy-friendly, and naturally hydrating for sensual pleasure. Washes off easily with warm water.',
     category: 'lubricants',
     categoryLabel: 'Lubes & Care',
-    price: 500,
-    salePrice: 450,
+    price: 700,
+    salePrice: 650,
     rating: 4.9,
     reviewCount: 110,
     badge: 'sale',
@@ -381,11 +381,50 @@ export const PRODUCTS: Product[] = [
       {
         name: 'Classic Pure Hydration',
         hex: '#f43f5e',
-        imageUrl: '/products/intimate_lube_tube_1787511198808.jpg'
+        imageUrl: '/products/intimate_lube_tube_1787511198808.jpeg'
       }
     ],
-    mainImage: '/products/intimate_lube_tube_1787511198808.jpg',
-    galleryImages: ['/products/intimate_lube_tube_1787511198808.jpg']
+    mainImage: '/products/intimate_lube_tube_1787511198808.jpeg',
+    galleryImages: ['/products/intimate_lube_tube_1787511198808.jpeg']
+  },
+  {
+    id: 'water-based-lube',
+    name: 'Water-Based Lube',
+    tagline: 'Smooth, lightweight water-based glide for everyday comfort.',
+    description: 'A gentle water-based lubricant that is easy to wash off, toy-friendly, condom-safe, and suitable for comfortable everyday use.',
+    category: 'lubricants',
+    categoryLabel: 'Lubes & Care',
+    price: 500,
+    rating: 4.8,
+    reviewCount: 24,
+    badge: 'new',
+    isFeatured: true,
+    inStock: true,
+    stockQuantity: 30,
+    features: [
+      'Water-based and easy to wash off',
+      'Toy-safe and condom-compatible',
+      'Smooth, non-sticky formula',
+      'Gentle for sensitive skin',
+      'Convenient everyday size'
+    ],
+    specs: {
+      material: 'Water-Based Formula',
+      vibrationModes: 'N/A',
+      waterproof: 'Water-soluble',
+      battery: 'N/A',
+      noiseLevel: 'N/A',
+      dimensions: 'Standard bottle'
+    },
+    colors: [
+      {
+        name: 'Classic Clear',
+        hex: '#f5f5f4',
+        imageUrl: '/products/water_based lube.jpeg'
+      }
+    ],
+    mainImage: '/products/water_based lube.jpeg',
+    galleryImages: ['/products/water_based lube.jpeg']
   },
   {
     id: 'lush-wearable-egg-vibrator',
@@ -394,7 +433,8 @@ export const PRODUCTS: Product[] = [
     description: 'This luxury app-controlled, G-curved, wearable egg vibrator is designed to precisely hug your internal hot spots for solo or long-distance couples play. Connect with your partner anywhere in Kenya or worldwide via smartphone app.',
     category: 'lovense',
     categoryLabel: 'Couples & Wireless',
-    price: 3000,
+    price: 3500,
+    salePrice: 3000,
     rating: 4.9,
     reviewCount: 88,
     badge: 'bestseller',
@@ -421,11 +461,11 @@ export const PRODUCTS: Product[] = [
       {
         name: 'Magenta Orchid',
         hex: '#d946ef',
-        imageUrl: '/products/lush_wearable_egg_1787511210817.jpg'
+        imageUrl: '/products/lume.png'
       }
     ],
-    mainImage: '/products/lush_wearable_egg_1787511210817.jpg',
-    galleryImages: ['/products/lush_wearable_egg_1787511210817.jpg']
+    mainImage: '/products/lume.png',
+    galleryImages: ['/products/lume.png']
   },
   {
     id: 'smart-vibrating-butt-plug',
@@ -506,45 +546,6 @@ export const PRODUCTS: Product[] = [
     galleryImages: ['/products/strap_on_harness_kit_1787511464951.jpg']
   },
   {
-    id: 'wearable-panty-butterfly-vibrator',
-    name: 'Wearable Panty Vibrator',
-    tagline: 'App-controlled wearable butterfly with dual clitoral & G-spot motors.',
-    description: 'Wearable Dildo APP Remote Control Clitoral G Spot Butterfly Vibrator with Dual Motors and Bluetooth Rechargeable battery. Fits discreetly in panties for public teases or hands-free intimacy.',
-    category: 'ladies-toys',
-    categoryLabel: 'Ladies Toys',
-    price: 4000,
-    rating: 5.0,
-    reviewCount: 58,
-    badge: 'hot',
-    isBestseller: true,
-    isFeatured: true,
-    inStock: true,
-    stockQuantity: 12,
-    features: [
-      'Dual motor stimulation: Flexible butterfly wings + internal curved shaft',
-      'Long-distance smartphone remote app & local wireless control',
-      'Whisper silent motor for discreet public and private pleasure',
-      'IPX7 Waterproof body with magnetic fast charging'
-    ],
-    specs: {
-      material: 'Ultra-Soft Medical Silicone',
-      vibrationModes: 'Unlimited custom patterns via App + 10 Pre-sets',
-      waterproof: 'IPX7 Waterproof',
-      battery: 'USB Magnetic Rechargeable',
-      noiseLevel: 'Whisper Silent (< 38 dB)',
-      dimensions: '12cm x 6.5cm'
-    },
-    colors: [
-      {
-        name: 'Velvet Purple',
-        hex: '#9333ea',
-        imageUrl: '/products/wearable_panty_butterfly_1787511484942.jpg'
-      }
-    ],
-    mainImage: '/products/wearable_panty_butterfly_1787511484942.jpg',
-    galleryImages: ['/products/wearable_panty_butterfly_1787511484942.jpg']
-  },
-  {
     id: 'realistic-suction-cup-dildo',
     name: 'Realistic Suction-Cup Dildo',
     tagline: 'Dual-density lifelike silicone with ultra-strong suction base.',
@@ -555,6 +556,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 45,
     badge: 'hot',
+    isBestseller: true,
     isFeatured: true,
     inStock: true,
     stockQuantity: 15,
@@ -576,12 +578,12 @@ export const PRODUCTS: Product[] = [
       {
         name: 'Warm Mocha Bronze',
         hex: '#854d0e',
-        imageUrl: '/products/suction_base_massager_1787511501533.jpg'
+        imageUrl: '/products/suction_base_massager_1787511501533.jpg.jpeg'
       }
     ],
-    mainImage: '/products/suction_base_massager_1787511501533.jpg',
-    galleryImages: ['/products/suction_base_massager_1787511501533.jpg']
-  }
+    mainImage: '/products/suction_base_massager_1787511501533.jpg.jpeg',
+    galleryImages: ['/products/suction_base_massager_1787511501533.jpg.jpeg']
+  },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [

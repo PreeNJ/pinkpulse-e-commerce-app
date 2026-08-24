@@ -89,11 +89,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           {/* Filter Trigger */}
           <button
             onClick={() => setShowFilterModal(!showFilterModal)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${
-              showFilterModal || inStockOnly || maxPriceFilter < 7000
-                ? 'bg-[#b84663] text-white border-[#b84663]'
-                : 'bg-[#150f1a] text-neutral-300 border-[#2b2133] hover:border-[#b84663]/50'
-            }`}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${showFilterModal || inStockOnly || maxPriceFilter < 7000
+              ? 'bg-[#b84663] text-white border-[#b84663]'
+              : 'bg-[#150f1a] text-neutral-300 border-[#2b2133] hover:border-[#b84663]/50'
+              }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filter</span>
@@ -121,18 +120,16 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           <div className="hidden sm:flex items-center bg-[#150f1a] border border-[#2b2133] rounded-xl p-1">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-lg transition-colors ${
-                viewMode === 'grid' ? 'bg-[#b84663] text-white' : 'text-neutral-400 hover:text-white'
-              }`}
+              className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-[#b84663] text-white' : 'text-neutral-400 hover:text-white'
+                }`}
               title="Grid View"
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-lg transition-colors ${
-                viewMode === 'list' ? 'bg-[#b84663] text-white' : 'text-neutral-400 hover:text-white'
-              }`}
+              className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-[#b84663] text-white' : 'text-neutral-400 hover:text-white'
+                }`}
               title="List View"
             >
               <List className="w-4 h-4" />
@@ -216,11 +213,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           <button
             key={cat.id}
             onClick={() => onSelectCategory(cat.id)}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
-              selectedCategory === cat.id
-                ? 'bg-[#b84663] text-white shadow-md shadow-rose-950/40 font-bold scale-105'
-                : 'bg-[#150f1a] hover:bg-[#201827] text-neutral-300 border border-[#2b2133]'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${selectedCategory === cat.id
+              ? 'bg-[#b84663] text-white shadow-md shadow-rose-950/40 font-bold scale-105'
+              : 'bg-[#150f1a] hover:bg-[#201827] text-neutral-300 border border-[#2b2133]'
+              }`}
           >
             {cat.label}
           </button>

@@ -22,7 +22,7 @@ export default function PinkPulseApp() {
   const [products] = useState<Product[]>(PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  
+
   // Cart state persisted to localStorage
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
@@ -104,9 +104,11 @@ export default function PinkPulseApp() {
       );
 
       if (existingIndex > -1) {
-        const updated = [...prev];
-        updated[existingIndex].quantity += quantity;
-        return updated;
+        return prev.map((item, index) =>
+          index === existingIndex
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
       } else {
         return [...prev, { product, selectedColor: color, quantity }];
       }

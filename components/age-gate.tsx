@@ -24,7 +24,7 @@ export const AgeGate: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
       <div className="w-full max-w-md bg-[#120d18] border border-[#3d2c47] rounded-3xl p-8 text-center shadow-2xl space-y-6">
-        
+
         {/* Brand Logo Circular Emblem */}
         <PinkPulseLogo size="lg" variant="circle" showTagline={true} />
 
@@ -37,7 +37,7 @@ export const AgeGate: React.FC = () => {
             onClick={handleConfirm}
             className="w-full py-3.5 rounded-xl bg-[#b84663] hover:bg-[#c95372] text-white font-bold text-xs tracking-wider uppercase shadow-lg shadow-rose-950/50 transition-all active:scale-95"
           >
-            I am 18 or older — Enter Boutique
+            I am 18 or older — Join Pink Pulse
           </button>
 
           <a

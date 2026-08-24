@@ -66,7 +66,7 @@ Please confirm delivery.`;
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
         <div className="w-screen max-w-md bg-[#120d18] border-l border-[#2b2133] flex flex-col justify-between shadow-2xl">
-          
+
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-[#231b28] flex items-center justify-between bg-[#150f1d]">
             <div className="flex items-center gap-2.5">
@@ -180,7 +180,7 @@ Please confirm delivery.`;
                 </div>
                 <div className="flex items-center justify-between text-neutral-400">
                   <span>Packaging</span>
-                  <span className="text-emerald-400 font-medium">Free & Discreet</span>
+                  <span className="text-emerald-400 font-medium">Free</span>
                 </div>
                 <div className="flex items-center justify-between text-sm font-bold text-white pt-1.5 border-t border-[#231b28]">
                   <span>Total</span>

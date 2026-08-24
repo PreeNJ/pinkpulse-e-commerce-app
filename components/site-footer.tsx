@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, MessageCircle, Phone, Mail, MapPin, Truck, AtSign } from 'lucide-react';
-import { WHATSAPP_PHONE, WHATSAPP_DISPLAY, EMAIL_ADDRESS, TIKTOK_HANDLE, TIKTOK_URL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/products';
+import { ShieldCheck, MessageCircle, Phone, Mail, MapPin, Truck } from 'lucide-react';
+import { WHATSAPP_PHONE, EMAIL_ADDRESS, TIKTOK_HANDLE, TIKTOK_URL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/products';
 import { PinkPulseLogo } from './pink-pulse-logo';
+import { InstagramIcon } from './instagram-icon';
 import { ProductCategory } from '@/lib/types';
 
 interface SiteFooterProps {
@@ -30,7 +31,7 @@ export const SiteFooter: React.FC<SiteFooterProps> = ({ onSelectCategory }) => {
             <span className="text-sm font-black">KSh</span>
           </div>
           <div>
-            <p className="font-bold text-white text-sm">Discreet M-Pesa Payment</p>
+            <p className="font-bold text-white text-sm">M-Pesa Payment</p>
             <p className="text-[11px] text-neutral-400">Fast, confidential Kenyan mobile payment</p>
           </div>
         </div>
@@ -49,26 +50,29 @@ export const SiteFooter: React.FC<SiteFooterProps> = ({ onSelectCategory }) => {
       {/* Main Footer Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          
+
           {/* Col 1 & 2: Brand Info, Contacts & Redirects */}
           <div className="lg:col-span-2 space-y-4">
             <PinkPulseLogo size="md" variant="horizontal" />
-            
+
             <p className="text-neutral-400 text-xs leading-relaxed max-w-sm font-light">
               Kenya’s premier intimate wellness brand offering body-safe, luxurious, and reliable adult novelties. Fast discreet delivery countrywide.
             </p>
 
             <div className="pt-1 space-y-2 text-neutral-300 text-xs">
-              <p className="flex items-center gap-2">
+              <a
+                href={`tel:${WHATSAPP_PHONE}`}
+                className="flex items-center gap-2 hover:text-white transition-colors"
+              >
                 <Phone className="w-3.5 h-3.5 text-[#f47293]" />
-                <span>Call: <strong className="text-white">{WHATSAPP_DISPLAY}</strong></span>
-              </p>
+                <span>Call Us</span>
+              </a>
               <a
                 href={`mailto:${EMAIL_ADDRESS}`}
                 className="flex items-center gap-2 text-neutral-300 hover:text-white transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-[#f47293]" />
-                <span>Email: <strong className="text-white underline">{EMAIL_ADDRESS}</strong></span>
+                <span>Email Us</span>
               </a>
               <p className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#f47293]" />
@@ -108,7 +112,7 @@ export const SiteFooter: React.FC<SiteFooterProps> = ({ onSelectCategory }) => {
                   rel="noopener noreferrer"
                   className="px-3.5 py-2 rounded-xl bg-[#140e1b] hover:bg-[#20182b] border border-[#2c2035] text-neutral-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                 >
-                  <AtSign className="w-3.5 h-3.5 text-[#f47293]" />
+                  <InstagramIcon className="w-3.5 h-3.5 text-[#f47293]" />
                   <span>Instagram</span>
                 </a>
 
