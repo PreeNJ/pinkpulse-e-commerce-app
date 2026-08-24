@@ -22,26 +22,13 @@ export default function PinkPulseApp() {
   const [products] = useState<Product[]>(PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [storageHydrated, setStorageHydrated] = useState(false);
 
   // Cart state persisted to localStorage
-  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('pinkpulse_cart');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // Wishlist state persisted to localStorage
-  const [wishlistIds, setWishlistIds] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('pinkpulse_wishlist');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
 
   // Modals and Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -73,22 +60,38 @@ export default function PinkPulseApp() {
   // Toast Notification
   const [toastMessage, setToastMessage] = useState<{ text: string; icon: 'cart' | 'wishlist' | 'success' } | null>(null);
 
+  // Read browser-only state after the server and client share the same initial render.
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem('pinkpulse_cart');
+      const savedWishlist = localStorage.getItem('pinkpulse_wishlist');
+      if (savedCart) setCartItems(JSON.parse(savedCart));
+      if (savedWishlist) setWishlistIds(JSON.parse(savedWishlist));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setStorageHydrated(true);
+    }
+  }, []);
+
   // Sync to local storage
   useEffect(() => {
+    if (!storageHydrated) return;
     try {
       localStorage.setItem('pinkpulse_cart', JSON.stringify(cartItems));
     } catch (e) {
       console.error(e);
     }
-  }, [cartItems]);
+  }, [cartItems, storageHydrated]);
 
   useEffect(() => {
+    if (!storageHydrated) return;
     try {
       localStorage.setItem('pinkpulse_wishlist', JSON.stringify(wishlistIds));
     } catch (e) {
       console.error(e);
     }
-  }, [wishlistIds]);
+  }, [wishlistIds, storageHydrated]);
 
   const showToast = (text: string, icon: 'cart' | 'wishlist' | 'success' = 'cart') => {
     setToastMessage({ text, icon });
