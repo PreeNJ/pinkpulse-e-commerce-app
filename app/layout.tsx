@@ -30,21 +30,9 @@ export const metadata: Metadata = {
     'Pink Pulse - Your pleasure is our priority. 100% discreet packaging and fast countrywide delivery across Kenya. Order online or via WhatsApp +254 762 446 006.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
   },
 }
 
