@@ -6,6 +6,8 @@ import { CartItem } from '@/lib/types';
 import { KENYA_LOCATIONS, WHATSAPP_PHONE } from '@/lib/products';
 import { PinkPulseLogo } from './pink-pulse-logo';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -24,7 +26,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [address, setAddress] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(KENYA_LOCATIONS[0]);
   const [paymentMethod, setPaymentMethod] = useState<'mpesa_stk' | 'cash_on_delivery' | 'whatsapp'>('mpesa_stk');
-  
+
   // STK Push State Management
   const [stkStatus, setStkStatus] = useState<'idle' | 'triggering' | 'awaiting_pin' | 'completed' | 'failed'>('idle');
   const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null);
@@ -64,7 +66,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     if (stkStatus === 'awaiting_pin' && checkoutRequestId) {
       pollInterval = setInterval(async () => {
         try {
-          const res = await fetch(`/api/mpesa/query/${checkoutRequestId}`);
+          const res = await fetch(`${API_BASE_URL}/mpesa/query/${checkoutRequestId}`);
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'COMPLETED') {
@@ -106,7 +108,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setCountdown(60);
 
     try {
-      const response = await fetch('/api/mpesa/stkpush', {
+      const response = await fetch(`${API_BASE_URL}/mpesa/stkpush`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -176,7 +178,7 @@ Please confirm delivery.`;
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
     >
       <div className="relative w-full max-w-2xl bg-[#120d18] border border-[#382b42] rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col">
-        
+
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-[#231b28] flex items-center justify-between bg-[#0e0a13] shrink-0">
           <div className="flex items-center gap-3">
@@ -362,7 +364,7 @@ Please confirm delivery.`;
         {/* Standard Form View */}
         {stkStatus !== 'awaiting_pin' && stkStatus !== 'failed' && !orderComplete && (
           <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1">
-            
+
             {/* Customer Details */}
             <div className="space-y-3">
               <h4 className="text-xs uppercase tracking-widest text-[#f4bac7] font-bold">
@@ -444,11 +446,10 @@ Please confirm delivery.`;
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('mpesa_stk')}
-                  className={`p-3 rounded-xl border text-left text-xs transition-all relative ${
-                    paymentMethod === 'mpesa_stk'
+                  className={`p-3 rounded-xl border text-left text-xs transition-all relative ${paymentMethod === 'mpesa_stk'
                       ? 'border-[#00a651] bg-[#0c1f13] text-white shadow-lg shadow-emerald-950/40 font-bold'
                       : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-[#00a651] font-bold">
                     <Smartphone className="w-4 h-4" />
@@ -460,11 +461,10 @@ Please confirm delivery.`;
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('cash_on_delivery')}
-                  className={`p-3 rounded-xl border text-left text-xs transition-all ${
-                    paymentMethod === 'cash_on_delivery'
+                  className={`p-3 rounded-xl border text-left text-xs transition-all ${paymentMethod === 'cash_on_delivery'
                       ? 'border-[#b84663] bg-[#22162a] text-white font-bold'
                       : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-[#f4bac7] font-bold">
                     <Truck className="w-4 h-4" />
@@ -476,11 +476,10 @@ Please confirm delivery.`;
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('whatsapp')}
-                  className={`p-3 rounded-xl border text-left text-xs transition-all ${
-                    paymentMethod === 'whatsapp'
+                  className={`p-3 rounded-xl border text-left text-xs transition-all ${paymentMethod === 'whatsapp'
                       ? 'border-[#b84663] bg-[#22162a] text-white font-bold'
                       : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
                     <MessageCircle className="w-4 h-4" />
@@ -520,11 +519,10 @@ Please confirm delivery.`;
               <button
                 type="submit"
                 disabled={stkStatus === 'triggering'}
-                className={`flex-1 py-3.5 rounded-xl text-white font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 ${
-                  paymentMethod === 'mpesa_stk'
+                className={`flex-1 py-3.5 rounded-xl text-white font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 ${paymentMethod === 'mpesa_stk'
                     ? 'bg-[#00a651] hover:bg-[#008f45]'
                     : 'bg-[#b84663] hover:bg-[#c95372]'
-                }`}
+                  }`}
               >
                 {stkStatus === 'triggering' ? (
                   <>
