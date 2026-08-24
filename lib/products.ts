@@ -27,7 +27,7 @@ export const CATEGORY_CARDS: CategoryCard[] = [
     id: 'lovense',
     title: 'COUPLES & WIRELESS',
     subtitle: 'App Control & Wearables',
-    imageUrl: '/products/lume.png',
+    imageUrl: '/products/lush_wearable_egg_1787511210817.jpg',
     count: 2,
   },
   {
@@ -461,11 +461,11 @@ export const PRODUCTS: Product[] = [
       {
         name: 'Magenta Orchid',
         hex: '#d946ef',
-        imageUrl: '/products/lume.png'
+        imageUrl: '/products/lush_wearable_egg_1787511210817.jpg'
       }
     ],
-    mainImage: '/products/lume.png',
-    galleryImages: ['/products/lume.png']
+    mainImage: '/products/lush_wearable_egg_1787511210817.jpg',
+    galleryImages: ['/products/lush_wearable_egg_1787511210817.jpg']
   },
   {
     id: 'smart-vibrating-butt-plug',
