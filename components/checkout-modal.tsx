@@ -119,7 +119,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         }),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+      let data: { success?: boolean; CheckoutRequestID?: string; CustomerMessage?: string; error?: string } = {};
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        data = { error: responseText || `Server returned HTTP ${response.status}.` };
+      }
 
       if (response.ok && data.success) {
         setCheckoutRequestId(data.CheckoutRequestID);
@@ -447,8 +453,8 @@ Please confirm delivery.`;
                   type="button"
                   onClick={() => setPaymentMethod('mpesa_stk')}
                   className={`p-3 rounded-xl border text-left text-xs transition-all relative ${paymentMethod === 'mpesa_stk'
-                      ? 'border-[#00a651] bg-[#0c1f13] text-white shadow-lg shadow-emerald-950/40 font-bold'
-                      : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
+                    ? 'border-[#00a651] bg-[#0c1f13] text-white shadow-lg shadow-emerald-950/40 font-bold'
+                    : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
                     }`}
                 >
                   <div className="flex items-center gap-1.5 text-[#00a651] font-bold">
@@ -462,8 +468,8 @@ Please confirm delivery.`;
                   type="button"
                   onClick={() => setPaymentMethod('cash_on_delivery')}
                   className={`p-3 rounded-xl border text-left text-xs transition-all ${paymentMethod === 'cash_on_delivery'
-                      ? 'border-[#b84663] bg-[#22162a] text-white font-bold'
-                      : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
+                    ? 'border-[#b84663] bg-[#22162a] text-white font-bold'
+                    : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
                     }`}
                 >
                   <div className="flex items-center gap-1.5 text-[#f4bac7] font-bold">
@@ -477,8 +483,8 @@ Please confirm delivery.`;
                   type="button"
                   onClick={() => setPaymentMethod('whatsapp')}
                   className={`p-3 rounded-xl border text-left text-xs transition-all ${paymentMethod === 'whatsapp'
-                      ? 'border-[#b84663] bg-[#22162a] text-white font-bold'
-                      : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
+                    ? 'border-[#b84663] bg-[#22162a] text-white font-bold'
+                    : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
                     }`}
                 >
                   <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
@@ -520,8 +526,8 @@ Please confirm delivery.`;
                 type="submit"
                 disabled={stkStatus === 'triggering'}
                 className={`flex-1 py-3.5 rounded-xl text-white font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 ${paymentMethod === 'mpesa_stk'
-                    ? 'bg-[#00a651] hover:bg-[#008f45]'
-                    : 'bg-[#b84663] hover:bg-[#c95372]'
+                  ? 'bg-[#00a651] hover:bg-[#008f45]'
+                  : 'bg-[#b84663] hover:bg-[#c95372]'
                   }`}
               >
                 {stkStatus === 'triggering' ? (
