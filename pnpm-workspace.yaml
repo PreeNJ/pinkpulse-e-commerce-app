@@ -1,5 +1,5 @@
 allowBuilds:
-  '@prisma/engines': false
-  msw: false
-  prisma: false
-  sharp: false
+  '@prisma/engines': true
+  msw: true
+  prisma: true
+  sharp: true
