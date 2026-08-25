@@ -41,10 +41,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0d0b10]/95 backdrop-blur-md border-b border-[#28212e]">
+    <header className="sticky top-0 z-40 w-full overflow-x-hidden bg-[#0d0b10]/95 backdrop-blur-md border-b border-[#28212e]">
       {/* Top Utility Contact Bar */}
       <div className="bg-[#150f1a] px-4 py-1.5 text-xs text-neutral-300 border-b border-[#28212e]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex min-w-0 items-center justify-between gap-2">
           <div className="flex items-center gap-3 sm:gap-4 text-[11px]">
             <a
               href={`tel:${WHATSAPP_PHONE}`}
@@ -102,8 +102,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+      <div className="max-w-7xl mx-auto min-w-0 px-2 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center justify-between h-20 gap-1 sm:gap-4">
           {/* Mobile Menu Button */}
           <div className="flex items-center lg:hidden">
             <button
@@ -116,7 +116,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           </div>
 
           {/* Official Pink Pulse Brand Logo */}
-          <a href="#top" className="flex items-center">
+          <a href="#top" className="flex min-w-0 shrink items-center">
             <PinkPulseLogo size="md" variant="horizontal" />
           </a>
 
@@ -164,11 +164,11 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           </nav>
 
           {/* Right Action Icons & Search */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-3">
             {/* Search Input */}
             <div className="relative">
               {searchOpen ? (
-                <div className="flex items-center bg-[#181320] border border-[#d9778e]/50 rounded-full px-3 py-1.5 w-44 sm:w-60 transition-all">
+                <div className="flex items-center bg-[#181320] border border-[#d9778e]/50 rounded-full px-3 py-1.5 w-36 sm:w-60 transition-all">
                   <Search className="w-3.5 h-3.5 text-[#f47293] shrink-0 mr-2" />
                   <input
                     type="text"
@@ -191,7 +191,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
               ) : (
                 <button
                   onClick={() => setSearchOpen(true)}
-                  className="p-2.5 rounded-full text-neutral-300 hover:text-rose-300 hover:bg-[#1b1524] transition-colors"
+                  className="p-2 sm:p-2.5 rounded-full text-neutral-300 hover:text-rose-300 hover:bg-[#1b1524] transition-colors"
                   aria-label="Search products"
                 >
                   <Search className="w-5 h-5" />
@@ -202,7 +202,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
             {/* Wishlist Button */}
             <button
               onClick={onOpenWishlist}
-              className="relative p-2.5 rounded-full text-neutral-300 hover:text-rose-300 hover:bg-[#1b1524] transition-colors"
+              className="relative p-2 sm:p-2.5 rounded-full text-neutral-300 hover:text-rose-300 hover:bg-[#1b1524] transition-colors"
               aria-label="Wishlist"
             >
               <Heart className="w-5 h-5" />
@@ -216,7 +216,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
             {/* Cart Button */}
             <button
               onClick={onOpenCart}
-              className="relative flex items-center gap-2 px-3.5 py-2 rounded-full bg-gradient-to-r from-[#b84663] to-[#99344d] hover:from-[#c95372] hover:to-[#aa3d56] text-white shadow-md shadow-rose-950/40 transition-all active:scale-95"
+              className="relative flex shrink-0 items-center gap-1.5 px-2.5 py-2 sm:gap-2 sm:px-3.5 rounded-full bg-gradient-to-r from-[#b84663] to-[#99344d] hover:from-[#c95372] hover:to-[#aa3d56] text-white shadow-md shadow-rose-950/40 transition-all active:scale-95"
               aria-label="Open cart"
             >
               <ShoppingBag className="w-4 h-4" />

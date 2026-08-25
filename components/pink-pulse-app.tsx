@@ -173,7 +173,7 @@ export default function PinkPulseApp() {
   const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="pinkpulse-app min-h-screen bg-[#09080b] text-[#f4f2f4] flex flex-col font-sans relative selection:bg-pink-600 selection:text-white">
+    <div className="pinkpulse-app min-h-screen w-full overflow-x-hidden bg-[#09080b] text-[#f4f2f4] flex flex-col font-sans relative selection:bg-pink-600 selection:text-white">
       {/* 18+ Age Gate Protection */}
       <AgeGate />
 
