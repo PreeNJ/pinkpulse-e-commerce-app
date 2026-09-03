@@ -26,6 +26,17 @@ const normalizePhoneNumber = (value) => {
     return null;
 };
 
+const parseJsonResponse = async (response) => {
+    const text = await response.text();
+    if (!text) return {};
+
+    try {
+        return JSON.parse(text);
+    } catch {
+        return { rawResponse: text };
+    }
+};
+
 const getAccessToken = async () => {
     const credentials = Buffer.from(
         `${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`
@@ -34,9 +45,14 @@ const getAccessToken = async () => {
         headers: { Authorization: `Basic ${credentials}` },
     });
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     if (!response.ok || !data.access_token) {
-        throw new Error(data.errorMessage || "Unable to authenticate with M-Pesa.");
+        throw new Error(
+            data.errorMessage ||
+            data.error_description ||
+            data.rawResponse ||
+            `M-Pesa authentication failed with HTTP ${response.status}.`
+        );
     }
     return data.access_token;
 };
@@ -93,10 +109,10 @@ const stkPush = async (req, res) => {
             }),
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
         if (!response.ok || data.ResponseCode !== "0") {
             return res.status(502).json({
-                error: data.errorMessage || data.ResponseDescription || "M-Pesa STK Push could not be sent.",
+                error: data.errorMessage || data.ResponseDescription || data.rawResponse || "M-Pesa STK Push could not be sent.",
             });
         }
 
@@ -136,12 +152,12 @@ const queryStkPush = async (req, res) => {
             }),
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
         if (data.ResultCode === "0") {
             return res.json({ status: "COMPLETED", receipt: data.CallbackMetadata?.Item?.find((item) => item.Name === "MpesaReceiptNumber")?.Value });
         }
         if (data.ResultCode && data.ResultCode !== "0") {
-            return res.json({ status: "FAILED", description: data.ResultDesc || "Payment was not completed." });
+            return res.json({ status: "FAILED", description: data.ResultDesc || data.rawResponse || "Payment was not completed." });
         }
         return res.json({ status: "PENDING" });
     } catch (error) {
