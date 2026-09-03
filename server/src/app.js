@@ -9,6 +9,7 @@ const orderRoutes = require("./routes/order.routes");
 const cartRoutes = require("./routes/cart.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
 const mpesaRoutes = require("./routes/mpesa.routes");
+const paystackRoutes = require("./routes/paystack.routes");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/mpesa", mpesaRoutes);
+app.use("/api/paystack", paystackRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
