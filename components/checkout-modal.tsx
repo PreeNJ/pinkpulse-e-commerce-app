@@ -23,9 +23,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 }) => {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(KENYA_LOCATIONS[0]);
-  const [paymentMethod, setPaymentMethod] = useState<'mpesa_stk' | 'cash_on_delivery' | 'whatsapp'>('mpesa_stk');
+  const [paymentMethod, setPaymentMethod] = useState<'mpesa_stk' | 'paystack' | 'cash_on_delivery' | 'whatsapp'>('mpesa_stk');
 
   // STK Push State Management
   const [stkStatus, setStkStatus] = useState<'idle' | 'triggering' | 'awaiting_pin' | 'completed' | 'failed'>('idle');
@@ -34,6 +35,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [countdown, setCountdown] = useState<number>(60);
   const [orderComplete, setOrderComplete] = useState<boolean>(false);
+  const [paystackReference, setPaystackReference] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -88,6 +90,26 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     return () => clearInterval(pollInterval);
   }, [stkStatus, checkoutRequestId]);
 
+  useEffect(() => {
+    if (!paystackReference) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/paystack/verify/${encodeURIComponent(paystackReference)}`);
+        const data = await response.json();
+        if (response.ok && data.status === 'success' && data.amount === grandTotal * 100 && data.currency === 'KES') {
+          setMpesaReceipt(data.receipt || paystackReference);
+          setPaystackReference(null);
+          setOrderComplete(true);
+        }
+      } catch {
+        // Continue checking while the Paystack checkout is open.
+      }
+    }, 3000);
+
+    return () => clearInterval(pollInterval);
+  }, [paystackReference]);
+
   if (!isOpen) return null;
 
   const subtotal = items.reduce((sum, item) => {
@@ -127,7 +149,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         data = { error: responseText || `Server returned HTTP ${response.status}.` };
       }
 
-      if (response.ok && data.success) {
+      if (response.ok && data.success && data.CheckoutRequestID) {
         setCheckoutRequestId(data.CheckoutRequestID);
         setStkStatus('awaiting_pin');
         setStatusMessage(data.CustomerMessage || `Enter M-Pesa PIN on ${phone} to complete payment.`);
@@ -141,10 +163,48 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }
   };
 
+  const startPaystackCheckout = async () => {
+    if (!email) {
+      alert('Please enter your email address for Paystack checkout.');
+      return;
+    }
+
+    setStkStatus('triggering');
+    setStatusMessage('Opening secure Paystack checkout...');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/paystack/initialize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          amount: grandTotal,
+          fullName,
+          location: selectedLocation.name,
+        }),
+      });
+      const data = await response.json();
+
+      if (response.ok && data.success && data.authorization_url && data.reference) {
+        setPaystackReference(data.reference);
+        setStkStatus('idle');
+        window.open(data.authorization_url, '_blank', 'noopener,noreferrer');
+      } else {
+        setStkStatus('failed');
+        setStatusMessage(data.error || 'Unable to start Paystack checkout. Please try again.');
+      }
+    } catch {
+      setStkStatus('failed');
+      setStatusMessage('Network error communicating with Paystack.');
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (paymentMethod === 'mpesa_stk') {
       triggerMpesaStkPush();
+    } else if (paymentMethod === 'paystack') {
+      startPaystackCheckout();
     } else {
       setOrderComplete(true);
     }
@@ -155,7 +215,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       .map((item) => `• ${item.product.name} (${item.selectedColor.name}) x${item.quantity} - KSh ${(item.product.salePrice ?? item.product.price) * item.quantity}`)
       .join('\n');
 
-    const receiptInfo = customReceipt || mpesaReceipt ? `\n*M-Pesa Receipt:* ${customReceipt || mpesaReceipt}` : '';
+    const receiptInfo = customReceipt || mpesaReceipt
+      ? `\n*${paymentMethod === 'paystack' ? 'Paystack Reference' : 'M-Pesa Receipt'}:* ${customReceipt || mpesaReceipt}`
+      : '';
 
     const message = `*PINK PULSE ORDER*
 Name: ${fullName || 'Client'}
@@ -278,18 +340,18 @@ Please confirm delivery.`;
                 Payment Incomplete
               </h3>
               <p className="text-neutral-300 text-xs sm:text-sm mt-1 max-w-md mx-auto">
-                {statusMessage || 'The M-Pesa prompt was not completed.'}
+                {statusMessage || `The ${paymentMethod === 'paystack' ? 'Paystack payment' : 'M-Pesa prompt'} was not completed.`}
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full max-w-md">
               <button
                 type="button"
-                onClick={triggerMpesaStkPush}
+                onClick={paymentMethod === 'paystack' ? startPaystackCheckout : triggerMpesaStkPush}
                 className="flex-1 py-3 rounded-xl bg-[#00a651] hover:bg-[#009247] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>Retry M-Pesa PIN Prompt</span>
+                <span>{paymentMethod === 'paystack' ? 'Retry Paystack Checkout' : 'Retry M-Pesa PIN Prompt'}</span>
               </button>
               <button
                 type="button"
@@ -312,7 +374,7 @@ Please confirm delivery.`;
 
             <div>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
-                {mpesaReceipt ? 'M-Pesa Payment Confirmed!' : 'Order Received!'}
+                {mpesaReceipt ? `${paymentMethod === 'paystack' ? 'Paystack Payment' : 'M-Pesa Payment'} Confirmed!` : 'Order Received!'}
               </h3>
               <p className="text-neutral-300 text-xs sm:text-sm mt-1 max-w-md mx-auto font-light">
                 Thank you, <strong>{fullName || 'valued client'}</strong>! Your order of <strong>KSh {grandTotal.toLocaleString()}</strong> is queued for delivery to <strong>{selectedLocation.name}</strong>.
@@ -322,7 +384,7 @@ Please confirm delivery.`;
             {mpesaReceipt && (
               <div className="p-4 rounded-2xl bg-[#140f1c] border border-emerald-500/40 text-left space-y-1.5 max-w-sm w-full shadow-lg">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-neutral-400">M-Pesa Receipt:</span>
+                  <span className="text-neutral-400">{paymentMethod === 'paystack' ? 'Paystack Reference:' : 'M-Pesa Receipt:'}</span>
                   <span className="font-mono font-bold text-emerald-400 tracking-wider text-sm">{mpesaReceipt}</span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
@@ -394,7 +456,7 @@ Please confirm delivery.`;
 
                 <div>
                   <label className="block text-xs text-neutral-300 font-medium mb-1">
-                    M-Pesa Phone Number *
+                    Phone Number *
                   </label>
                   <input
                     type="tel"
@@ -406,6 +468,22 @@ Please confirm delivery.`;
                   />
                 </div>
               </div>
+
+              {paymentMethod === 'paystack' && (
+                <div>
+                  <label className="block text-xs text-neutral-300 font-medium mb-1">
+                    Email for Paystack receipt *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#0e0a13] border border-[#2e2336] text-white text-xs placeholder:text-neutral-500 focus:outline-none focus:border-[#b84663]"
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs text-neutral-300 font-medium mb-1">
@@ -448,7 +526,7 @@ Please confirm delivery.`;
                 2. Payment Method
               </h4>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('mpesa_stk')}
@@ -462,6 +540,21 @@ Please confirm delivery.`;
                     <span>M-Pesa STK Push</span>
                   </div>
                   <p className="text-[10px] text-neutral-300 mt-1">Instant PIN prompt to phone</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('paystack')}
+                  className={`p-3 rounded-xl border text-left text-xs transition-all relative ${paymentMethod === 'paystack'
+                    ? 'border-[#00c3a5] bg-[#0c211e] text-white shadow-lg shadow-teal-950/40 font-bold'
+                    : 'border-[#282030] bg-[#0e0a13] text-neutral-400 hover:border-neutral-600'
+                    }`}
+                >
+                  <div className="flex items-center gap-1.5 text-[#00c3a5] font-bold">
+                    <Lock className="w-4 h-4" />
+                    <span>Paystack</span>
+                  </div>
+                  <p className="text-[10px] text-neutral-300 mt-1">Card and mobile money</p>
                 </button>
 
                 <button
@@ -533,12 +626,17 @@ Please confirm delivery.`;
                 {stkStatus === 'triggering' ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Sending M-Pesa STK Prompt...</span>
+                    <span>{paymentMethod === 'paystack' ? 'Opening Paystack...' : 'Sending M-Pesa STK Prompt...'}</span>
                   </>
                 ) : paymentMethod === 'mpesa_stk' ? (
                   <>
                     <Smartphone className="w-4 h-4" />
                     <span>Pay with M-Pesa • KSh {grandTotal.toLocaleString()}</span>
+                  </>
+                ) : paymentMethod === 'paystack' ? (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    <span>Pay with Paystack • KSh {grandTotal.toLocaleString()}</span>
                   </>
                 ) : (
                   <span>Place Order • KSh {grandTotal.toLocaleString()}</span>

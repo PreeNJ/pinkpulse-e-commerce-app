@@ -1,7 +1,7 @@
 
 # Pink Pulse
 
-Pink Pulse is a discreet e-commerce storefront for intimate wellness products. The project contains a Next.js frontend, an Express API, Prisma migrations, PostgreSQL persistence, and optional M-Pesa STK Push checkout.
+Pink Pulse is a discreet e-commerce storefront for intimate wellness products. The project contains a Next.js frontend, an Express API, Prisma migrations, PostgreSQL persistence, and M-Pesa STK Push plus Paystack checkout.
 
 ## Project Structure
 
@@ -64,6 +64,9 @@ MPESA_CONSUMER_SECRET="your-sandbox-consumer-secret"
 MPESA_SHORTCODE="174379"
 MPESA_PASSKEY="your-sandbox-passkey"
 MPESA_CALLBACK_URL="https://your-api-domain.example/api/mpesa/callback"
+
+PAYSTACK_SECRET_KEY="sk_test_your-secret-key"
+PAYSTACK_CALLBACK_URL="https://your-frontend-domain.example/checkout"
 ```
 
 For live M-Pesa, use Safaricom production credentials, your real PayBill or Till number, the production API URL, and a public HTTPS callback URL. Do not mix sandbox credentials with production business numbers.
@@ -135,6 +138,7 @@ The API currently exposes routes under:
 /api/cart
 /api/checkout
 /api/mpesa
+/api/paystack
 ```
 
 M-Pesa checkout uses:
@@ -143,6 +147,15 @@ M-Pesa checkout uses:
 POST /api/mpesa/stkpush
 GET  /api/mpesa/query/:checkoutRequestId
 POST /api/mpesa/callback
+
+Paystack checkout uses:
+
+```text
+POST /api/paystack/initialize
+GET  /api/paystack/verify/:reference
+```
+
+Paystack amounts are sent in Kenyan shillings and converted to cents by the backend. Keep `PAYSTACK_SECRET_KEY` on the backend only. Enable the payment channels available for Kenya in the Paystack Dashboard.
 ```
 
 ## Storage Notes
